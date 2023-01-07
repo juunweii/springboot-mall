@@ -3,10 +3,15 @@ package com.walton.springbootmall.dao;
 import com.walton.springbootmall.dto.ProductRequest;
 import com.walton.springbootmall.model.Product;
 
+import java.util.List;
+
 /**
  * @author Walton Hung (chunweih@andrew.cmu.edu)
  */
 public interface ProductDao {
+
+    List<Product> getProducts();
+
 
     Product getProductById(Integer productId);
 
