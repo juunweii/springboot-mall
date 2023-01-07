@@ -1,6 +1,6 @@
 package com.walton.springbootmall.service;
 
-import com.walton.springbootmall.constant.ProductCategory;
+import com.walton.springbootmall.dto.ProductQueryParams;
 import com.walton.springbootmall.dto.ProductRequest;
 import com.walton.springbootmall.model.Product;
 
@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface ProductService {
 
-    List<Product> getProducts(ProductCategory category, String search);
+    List<Product> getProducts(ProductQueryParams productQueryParams);
 
     Product getProductById(Integer productId);
 

@@ -1,6 +1,7 @@
 package com.walton.springbootmall.controller;
 
 import com.walton.springbootmall.constant.ProductCategory;
+import com.walton.springbootmall.dto.ProductQueryParams;
 import com.walton.springbootmall.dto.ProductRequest;
 import com.walton.springbootmall.model.Product;
 import com.walton.springbootmall.service.ProductService;
@@ -25,8 +26,12 @@ public class ProductController {
     public ResponseEntity<List<Product>> getProducts(
             @RequestParam(required = false) ProductCategory category,
             @RequestParam(required = false) String search
-            ) {
-        List<Product> productList = productService.getProducts(category, search);
+    ) {
+        ProductQueryParams productQueryParams = new ProductQueryParams();
+        productQueryParams.setCategory(category);
+        productQueryParams.setSearch(search);
+
+        List<Product> productList = productService.getProducts(productQueryParams);
 
         return ResponseEntity.status(HttpStatus.OK).body(productList);
     }
