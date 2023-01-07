@@ -1,5 +1,6 @@
 package com.walton.springbootmall.dao;
 
+import com.walton.springbootmall.dto.ProductRequest;
 import com.walton.springbootmall.model.Product;
 
 /**
@@ -8,4 +9,6 @@ import com.walton.springbootmall.model.Product;
 public interface ProductDao {
 
     Product getProductById(Integer productId);
+
+    Integer createProduct(ProductRequest productRequest);
 }

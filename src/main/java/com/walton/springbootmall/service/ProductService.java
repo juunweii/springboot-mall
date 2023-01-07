@@ -1,5 +1,6 @@
 package com.walton.springbootmall.service;
 
+import com.walton.springbootmall.dto.ProductRequest;
 import com.walton.springbootmall.model.Product;
 
 /**
@@ -7,4 +8,6 @@ import com.walton.springbootmall.model.Product;
  */
 public interface ProductService {
     Product getProductById(Integer productId);
+
+    Integer createProduct(ProductRequest productRequest);
 }
