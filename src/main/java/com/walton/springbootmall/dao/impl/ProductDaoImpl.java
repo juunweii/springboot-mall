@@ -1,5 +1,6 @@
 package com.walton.springbootmall.dao.impl;
 
+import com.walton.springbootmall.constant.ProductCategory;
 import com.walton.springbootmall.dao.ProductDao;
 import com.walton.springbootmall.dto.ProductRequest;
 import com.walton.springbootmall.model.Product;
@@ -21,15 +22,26 @@ import java.util.Map;
  */
 @Component
 public class ProductDaoImpl implements ProductDao {
-
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Override
-    public List<Product> getProducts() {
-        String sql = "SELECT product_id, product_name, category, image_url, price, stock, description, created_date, last_modified_date FROM product";
+    public List<Product> getProducts(ProductCategory category, String search) {
+        String sql = "SELECT product_id, product_name, category, image_url, price, stock, description, created_date, last_modified_date FROM product WHERE 1=1";
 
         Map<String, Object> map = new HashMap<>();
+        //WHERE 1=1 進可攻退可守，在多個篩選條件時很有用
+        // 在category有值的時候才去加上category條件
+        //注意 AND 前面要有空白鍵！這樣query才不會黏在一起！
+        if (category != null) {
+            sql = sql + " AND category = :category";
+            map.put("category", category.name());
+        }
+
+        if (search != null) {
+            sql = sql + " AND product_name LIKE :search";
+            map.put("search", "%" + search + "%");
+        }
 
         List<Product> productList = namedParameterJdbcTemplate.query(sql, map, new ProductRowMapper());
 
