@@ -1,6 +1,7 @@
 package com.walton.springbootmall.service.impl;
 
 import com.walton.springbootmall.dao.UserDao;
+import com.walton.springbootmall.dto.UserLoginRequest;
 import com.walton.springbootmall.dto.UserRegisterRequest;
 import com.walton.springbootmall.model.User;
 import com.walton.springbootmall.service.UserService;
@@ -40,4 +41,23 @@ public class UserServiceImpl implements UserService {
         //Create account
         return userDao.createUser(userRegisterRequest);
     }
+
+    @Override
+    public User login(UserLoginRequest userLoginRequest) {
+        User user = userDao.getUserByEmail(userLoginRequest.getEmail());
+
+        if (user == null) {
+            log.warn("email {} not exist", userLoginRequest.getEmail());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
+        if (user.getPassword().equals(userLoginRequest.getPassword())) {
+            return user;
+        } else {
+            log.warn("email: {} wrong password", userLoginRequest.getEmail());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
 }
