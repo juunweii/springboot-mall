@@ -10,7 +10,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -38,6 +41,11 @@ public class UserServiceImpl implements UserService {
             log.warn("email {} already exist", userRegisterRequest.getEmail());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST); //400
         }
+
+        //MD5 encrypt password
+        String hashedPassword = DigestUtils.md5DigestAsHex(userRegisterRequest.getPassword().getBytes());
+        userRegisterRequest.setPassword(hashedPassword);
+
         //Create account
         return userDao.createUser(userRegisterRequest);
     }
@@ -46,12 +54,17 @@ public class UserServiceImpl implements UserService {
     public User login(UserLoginRequest userLoginRequest) {
         User user = userDao.getUserByEmail(userLoginRequest.getEmail());
 
+        //Check if user exist
         if (user == null) {
             log.warn("email {} not exist", userLoginRequest.getEmail());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
-        if (user.getPassword().equals(userLoginRequest.getPassword())) {
+        //MD5 encrypt login password
+        String  hashedPassword = DigestUtils.md5DigestAsHex(userLoginRequest.getPassword().getBytes());
+
+        //Compare password
+        if (user.getPassword().equals(hashedPassword)) {
             return user;
         } else {
             log.warn("email: {} wrong password", userLoginRequest.getEmail());
